@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+:root {
+  /* Bege — fundos e superfícies */
+  --color-bege-50: #fbf9f4;
+  --color-bege-100: #f5efe2;
+  --color-bege-200: #ece1c8;
+  --color-bege-300: #ddcda3;
+
+  /* Azul marinho — cor primária */
+  --color-azul-950: #0b1626;
+  --color-azul-900: #10203a;
+  --color-azul-800: #17304f;
+  --color-azul-700: #1f3f67;
+  --color-azul-600: #2c5486;
+  --color-azul-500: #3d6ba6;
+
+  /* Dourado — destaque/CTA */
+  --color-dourado-300: #e6cf9c;
+  --color-dourado-400: #d4b06a;
+  --color-dourado-500: #c19a4b;
+  --color-dourado-600: #a17f38;
+  --color-dourado-700: #7d612b;
+
+  /* Neutros */
+  --color-preto: #14120f;
+  --color-branco: #ffffff;
+
+  --background: var(--color-bege-50);
+  --foreground: var(--color-preto);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-bege-50: var(--color-bege-50);
+  --color-bege-100: var(--color-bege-100);
+  --color-bege-200: var(--color-bege-200);
+  --color-bege-300: var(--color-bege-300);
+
+  --color-azul-950: var(--color-azul-950);
+  --color-azul-900: var(--color-azul-900);
+  --color-azul-800: var(--color-azul-800);
+  --color-azul-700: var(--color-azul-700);
+  --color-azul-600: var(--color-azul-600);
+  --color-azul-500: var(--color-azul-500);
+
+  --color-dourado-300: var(--color-dourado-300);
+  --color-dourado-400: var(--color-dourado-400);
+  --color-dourado-500: var(--color-dourado-500);
+  --color-dourado-600: var(--color-dourado-600);
+  --color-dourado-700: var(--color-dourado-700);
+
+  --color-preto: var(--color-preto);
+  --color-branco: var(--color-branco);
+
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--color-dourado-400);
+  color: var(--color-azul-950);
+}
+
+/* Scrollbar discreta, tom bege/dourado */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bege-50);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-bege-300);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-dourado-400);
+}
