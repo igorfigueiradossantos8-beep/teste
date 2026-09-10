@@ -2,8 +2,8 @@
 -- Advocacia FB — 0006: RPCs para leitura/escrita do CPF/CNPJ criptografado
 --
 -- O client (browser/server actions) nunca criptografa/descriptografa direto;
--- usa estas funções, que rodam com a chave de criptografia guardada apenas
--- no servidor Postgres (current_setting('app.encryption_key')).
+-- usa estas funções, que rodam com a chave de criptografia guardada no
+-- Supabase Vault (ver public.get_encryption_key() em 0003).
 -- ============================================================================
 
 create or replace function public.set_cliente_documento(p_cliente_id uuid, p_documento text)
