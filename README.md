@@ -72,9 +72,13 @@ supabase/
    npx supabase link --project-ref SEU_PROJECT_REF
    npx supabase db push
    ```
-3. **Defina a chave de criptografia** usada para CPF/CNPJ e tokens do Google (uma única vez, no SQL Editor — nunca versione essa chave):
+3. **Defina a chave de criptografia** usada para CPF/CNPJ e tokens do Google, guardada no Supabase Vault (uma única vez, no SQL Editor — nunca versione essa chave):
    ```sql
-   alter database postgres set app.encryption_key = 'uma-chave-longa-e-aleatoria-só-sua';
+   select vault.create_secret(
+     'uma-chave-longa-e-aleatoria-só-sua',
+     'app_encryption_key',
+     'Chave de criptografia CPF/CNPJ e tokens Google - Advocacia FB'
+   );
    ```
 4. Execute `supabase/seed.sql` para carregar as configurações iniciais (dados do escritório, áreas do direito).
 5. Crie o primeiro usuário: cadastre-se pela tela de login (ou convide pelo Dashboard do Supabase em Authentication → Users → Invite), depois promova-o a admin:

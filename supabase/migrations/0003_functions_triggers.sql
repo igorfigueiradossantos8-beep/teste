@@ -61,28 +61,38 @@ create trigger on_auth_user_created
 
 -- ----------------------------------------------------------------------------
 -- Criptografia de CPF/CNPJ
--- A chave de criptografia vem de uma configuração do banco (Vault/GUC),
--- setada apenas no lado do servidor (nunca versionada). Ver README para
--- instruções de configuração via Supabase Dashboard > Database > Settings.
---   alter database postgres set app.encryption_key = '<chave-forte-aqui>';
+-- A chave de criptografia fica guardada no Supabase Vault (não em GUC de
+-- banco, que exige privilégio de superusuário indisponível em alguns planos/
+-- integrações). Configure-a uma única vez, no SQL Editor do Supabase:
+--   select vault.create_secret('<chave-forte-aqui>', 'app_encryption_key',
+--     'Chave de criptografia CPF/CNPJ e tokens Google - Advocacia FB');
 -- ----------------------------------------------------------------------------
+create or replace function public.get_encryption_key()
+returns text
+language sql
+stable
+security definer set search_path = public, vault
+as $$
+  select decrypted_secret from vault.decrypted_secrets where name = 'app_encryption_key' limit 1;
+$$;
+
 create or replace function public.encrypt_secret(plain text)
 returns bytea
 language sql
-security definer set search_path = public
+security definer set search_path = public, extensions
 as $$
   select case when plain is null or plain = '' then null
-    else pgp_sym_encrypt(plain, current_setting('app.encryption_key', true))
+    else pgp_sym_encrypt(plain, public.get_encryption_key())
   end;
 $$;
 
 create or replace function public.decrypt_secret(cipher bytea)
 returns text
 language sql
-security definer set search_path = public
+security definer set search_path = public, extensions
 as $$
   select case when cipher is null then null
-    else pgp_sym_decrypt(cipher, current_setting('app.encryption_key', true))
+    else pgp_sym_decrypt(cipher, public.get_encryption_key())
   end;
 $$;
 
@@ -92,6 +102,7 @@ create or replace function public.hash_document(doc text)
 returns text
 language sql
 immutable
+set search_path = public, extensions
 as $$
   select case when doc is null or doc = '' then null
     else encode(digest(regexp_replace(doc, '\D', '', 'g'), 'sha256'), 'hex')
